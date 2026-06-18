@@ -9,6 +9,8 @@ workflows:
     environment:
       flutter: stable
       xcode: latest
+      groups:
+        - apple_credentials # Codemagic'te tanımlayacağınız API anahtarları grubu (dağıtım için gerekir)
     triggering:
       events:
         - push
@@ -17,16 +19,27 @@ workflows:
           include: true
           source: true
     scripts:
+      - name: Set up code signing
+        # Eğer App Store Connect API anahtarınızı Codemagic'e bağladıysanız, 
+        # aşağıdaki komutların başındaki '#' işaretlerini kaldırarak otomatik imzalamayı aktif edebilirsiniz.
+        script: |
+          # keychain initialize
+          # app-store-connect fetch-signing-files "com.oudtuner.app.oudTuner" --project-type ios --create
+          # keychain add-certificates
+          echo "Code signing setup skipped. To build a signed app, configure your Apple API keys in Codemagic."
       - name: Get Flutter Packages
         script: |
           flutter packages pub get
-      - name: Flutter build iOS IPA
+      - name: Flutter build iOS App
         script: |
-          # Bu komut imzalanmamış (unsigned) bir IPA oluşturur.
-          # Eğer App Store Connect API anahtarınızı Codemagic'e bağlarsanız, 
-          # kod imzalama (code signing) otomatik olarak yapılacaktır.
-          flutter build ipa --release --no-codesign
+          # EĞER İMZALAMA AKTİF DEĞİLSE (Mevcut Durum): Test amaçlı sadece derleme başarısını görmek için bu komut çalışır:
+          flutter build ios --release --no-codesign
+          
+          # EĞER İMZALAMA AKTİFSE (App Store Connect için): 
+          # Üstteki komutun başına '#' koyun ve alttaki komutun başındaki '#' işaretini kaldırın:
+          # flutter build ipa --release
     artifacts:
+      - build/ios/iphoneos/*.app
       - build/ios/ipa/*.ipa
     publishing:
       email:

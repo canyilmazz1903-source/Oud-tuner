@@ -66,5 +66,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Ud sesini algılamak ve akort edebilmek için mikrofon izni gereklidir.</string>
 </dict>
 </plist>

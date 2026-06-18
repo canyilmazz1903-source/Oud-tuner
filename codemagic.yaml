@@ -1,0 +1,37 @@
+# Codemagic configuration file
+# Reference: https://docs.codemagic.io/yaml-schema/yaml-integration/
+
+workflows:
+  ios-release:
+    name: iOS Release Build
+    max_build_duration: 60
+    instance_type: mac_mini_m1
+    environment:
+      flutter: stable
+      xcode: latest
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'main'
+          include: true
+          source: true
+    scripts:
+      - name: Get Flutter Packages
+        script: |
+          flutter packages pub get
+      - name: Flutter build iOS IPA
+        script: |
+          # Bu komut imzalanmamış (unsigned) bir IPA oluşturur.
+          # Eğer App Store Connect API anahtarınızı Codemagic'e bağlarsanız, 
+          # kod imzalama (code signing) otomatik olarak yapılacaktır.
+          flutter build ipa --release --no-codesign
+    artifacts:
+      - build/ios/ipa/*.ipa
+    publishing:
+      email:
+        recipients:
+          - canyilmazz1903@gmail.com
+        notify:
+          success: true
+          failure: true

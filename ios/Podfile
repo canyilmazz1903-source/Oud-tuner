@@ -4,6 +4,9 @@ platform :ios, '14.0'
 # CocoaPods analytics sends usage stats. Remove if you want.
 # cocoapods_analytics!
 
+flutter_ios_podfile_setup = File.join(File.dirname(File.expand_path(__FILE__)), 'Flutter', 'podhelper.rb')
+require flutter_ios_podfile_setup
+
 flutter_install_all_ios_pods File.dirname(File.expand_path(__FILE__))
 
 target 'Runner' do
